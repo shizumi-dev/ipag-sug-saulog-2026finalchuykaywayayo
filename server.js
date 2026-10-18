@@ -27,8 +27,7 @@ if (SESSION_SECRET.length < 32) {
   process.exit(1);
 }
 
-const fs = require("node:fs");
-const path = require("node:path");
+const fs = require("fs");
 
 const pool = new Pool({
   connectionString: DATABASE_URL,
