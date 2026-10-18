@@ -27,14 +27,22 @@ if (SESSION_SECRET.length < 32) {
   process.exit(1);
 }
 
+const fs = require("node:fs");
+const path = require("node:path");
+
 const pool = new Pool({
   connectionString: DATABASE_URL,
-  // Supabase's connection URL commonly requires TLS. Verify certificate validation.
-  ssl: process.env.PGSSL === "disable" ? false : { rejectUnauthorized: true },
+  ssl: {
+    ca: fs.readFileSync(
+      path.join(__dirname, "certs", "supabase-ca.crt"),
+      "utf8"
+    ),
+    rejectUnauthorized: true
+  },
   max: 5,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000
-});
+}); 
 pool.on("error", (err) => console.error("Unexpected PostgreSQL pool error:", err.message));
 
 const CAPACITY = { GEC120: 30, FPE101: 30, NONE: 20 };
