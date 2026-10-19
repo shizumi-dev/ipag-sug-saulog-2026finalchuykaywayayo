@@ -44,8 +44,12 @@ const pool = new Pool({
 }); 
 pool.on("error", (err) => console.error("Unexpected PostgreSQL pool error:", err.message));
 
-const CAPACITY = { GEC120: 30, FPE101: 30, NONE: 20 };
-const DEADLINE = new Date("2026-10-19T21:00:00.000Z"); // October 20, 2026, 5:00 AM Philippines time
+const CAPACITY = {
+  GEC120: 30,
+  FPE101: 30,
+  NONE: 25
+};
+const DEADLINE = new Date("2026-10-21T02:00:00.000Z"); // October 21, 2026, 10:00 AM Philippines time
 const PROGRAMS = new Set(["ANB", "BDV", "PLB", "MCB", "MRB", "STAT", "MATH", "CHEM", "PHY"]);
 const SUBJECTS = new Set(["GEC120", "FPE101"]);
 
@@ -125,7 +129,7 @@ async function getCounts() {
   for (const row of result.rows) used[row.category] = row.count;
   const remaining = {};
   for (const key of Object.keys(CAPACITY)) remaining[key] = Math.max(0, CAPACITY[key] - used[key]);
-  return { capacity: CAPACITY, used, remaining, totalCapacity: 80,
+  return { capacity: CAPACITY, used, remaining, totalCapacity: 85,
     totalUsed: used.GEC120 + used.FPE101 + used.NONE,
     totalRemaining: remaining.GEC120 + remaining.FPE101 + remaining.NONE };
 }
